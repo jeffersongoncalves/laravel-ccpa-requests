@@ -2,6 +2,7 @@
 
 namespace JeffersonGoncalves\CcpaRequests;
 
+use JeffersonGoncalves\CcpaRequests\Commands\OverdueCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -10,9 +11,14 @@ class CcpaRequestsServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('laravel-ccpa-requests')
+            ->name('ccpa-requests')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigrations();
+            ->hasMigrations(['create_ccpa_consumer_requests_table'])
+            ->hasCommand(OverdueCommand::class);
+    }
+
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(RequestManager::class);
     }
 }
